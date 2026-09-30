@@ -1,0 +1,1052 @@
+{
+  "14": {
+    "id": 4,
+    "mapID": 1,
+    "areaID": 14,
+    "name": "Durotar",
+    "locLeft": -1962.4998779296875,
+    "locRight": -7249.99951171875,
+    "locTop": 1808.333251953125,
+    "locBottom": -1716.6666259765625
+  },
+  "215": {
+    "id": 9,
+    "mapID": 1,
+    "areaID": 215,
+    "name": "Mulgore",
+    "locLeft": 2047.9166259765625,
+    "locRight": -3089.583251953125,
+    "locTop": -272.9166564941406,
+    "locBottom": -3697.91650390625
+  },
+  "17": {
+    "id": 11,
+    "mapID": 1,
+    "areaID": 17,
+    "name": "Barrens",
+    "locLeft": 2622.91650390625,
+    "locRight": -7510.41650390625,
+    "locTop": 1612.4998779296875,
+    "locBottom": -5143.75
+  },
+  "0": {
+    "id": 485,
+    "mapID": 571,
+    "areaID": 0,
+    "name": "Northrend",
+    "locLeft": 9217.15234375,
+    "locRight": -8534.24609375,
+    "locTop": 10593.375,
+    "locBottom": -1240.8900146484375
+  },
+  "36": {
+    "id": 15,
+    "mapID": 0,
+    "areaID": 36,
+    "name": "Alterac",
+    "locLeft": 783.3333129882812,
+    "locRight": -2016.6666259765625,
+    "locTop": 1500.0,
+    "locBottom": -366.6666564941406
+  },
+  "45": {
+    "id": 16,
+    "mapID": 0,
+    "areaID": 45,
+    "name": "Arathi",
+    "locLeft": -866.6666259765625,
+    "locRight": -4466.66650390625,
+    "locTop": -133.3333282470703,
+    "locBottom": -2533.333251953125
+  },
+  "3": {
+    "id": 17,
+    "mapID": 0,
+    "areaID": 3,
+    "name": "Badlands",
+    "locLeft": -2079.16650390625,
+    "locRight": -4566.66650390625,
+    "locTop": -5889.5830078125,
+    "locBottom": -7547.91650390625
+  },
+  "4": {
+    "id": 19,
+    "mapID": 0,
+    "areaID": 4,
+    "name": "BlastedLands",
+    "locLeft": -1241.6666259765625,
+    "locRight": -4591.66650390625,
+    "locTop": -10566.666015625,
+    "locBottom": -12800.0
+  },
+  "85": {
+    "id": 20,
+    "mapID": 0,
+    "areaID": 85,
+    "name": "Tirisfal",
+    "locLeft": 3033.333251953125,
+    "locRight": -1485.4166259765625,
+    "locTop": 3837.499755859375,
+    "locBottom": 824.9999389648438
+  },
+  "130": {
+    "id": 21,
+    "mapID": 0,
+    "areaID": 130,
+    "name": "Silverpine",
+    "locLeft": 3449.999755859375,
+    "locRight": -750.0,
+    "locTop": 1666.6666259765625,
+    "locBottom": -1133.333251953125
+  },
+  "28": {
+    "id": 22,
+    "mapID": 0,
+    "areaID": 28,
+    "name": "WesternPlaguelands",
+    "locLeft": 416.6666564941406,
+    "locRight": -3883.333251953125,
+    "locTop": 3366.66650390625,
+    "locBottom": 499.9999694824219
+  },
+  "139": {
+    "id": 23,
+    "mapID": 0,
+    "areaID": 139,
+    "name": "EasternPlaguelands",
+    "locLeft": -2287.5,
+    "locRight": -6318.75,
+    "locTop": 3704.16650390625,
+    "locBottom": 1016.6666259765625
+  },
+  "267": {
+    "id": 24,
+    "mapID": 0,
+    "areaID": 267,
+    "name": "Hilsbrad",
+    "locLeft": 1066.6666259765625,
+    "locRight": -2133.333251953125,
+    "locTop": 400.0,
+    "locBottom": -1733.333251953125
+  },
+  "47": {
+    "id": 26,
+    "mapID": 0,
+    "areaID": 47,
+    "name": "Hinterlands",
+    "locLeft": -1575.0,
+    "locRight": -5425.0,
+    "locTop": 1466.6666259765625,
+    "locBottom": -1100.0
+  },
+  "1": {
+    "id": 27,
+    "mapID": 0,
+    "areaID": 1,
+    "name": "DunMorogh",
+    "locLeft": 1802.083251953125,
+    "locRight": -3122.91650390625,
+    "locTop": -3877.083251953125,
+    "locBottom": -7160.41650390625
+  },
+  "51": {
+    "id": 28,
+    "mapID": 0,
+    "areaID": 51,
+    "name": "SearingGorge",
+    "locLeft": -322.9166564941406,
+    "locRight": -2554.16650390625,
+    "locTop": -6100.0,
+    "locBottom": -7587.49951171875
+  },
+  "46": {
+    "id": 29,
+    "mapID": 0,
+    "areaID": 46,
+    "name": "BurningSteppes",
+    "locLeft": -266.6666564941406,
+    "locRight": -3195.833251953125,
+    "locTop": -7031.24951171875,
+    "locBottom": -8983.3330078125
+  },
+  "12": {
+    "id": 30,
+    "mapID": 0,
+    "areaID": 12,
+    "name": "Elwynn",
+    "locLeft": 1535.4166259765625,
+    "locRight": -1935.4166259765625,
+    "locTop": -7939.5830078125,
+    "locBottom": -10254.166015625
+  },
+  "41": {
+    "id": 32,
+    "mapID": 0,
+    "areaID": 41,
+    "name": "DeadwindPass",
+    "locLeft": -833.3333129882812,
+    "locRight": -3333.333251953125,
+    "locTop": -9866.666015625,
+    "locBottom": -11533.3330078125
+  },
+  "10": {
+    "id": 34,
+    "mapID": 0,
+    "areaID": 10,
+    "name": "Duskwood",
+    "locLeft": 833.3333129882812,
+    "locRight": -1866.6666259765625,
+    "locTop": -9716.666015625,
+    "locBottom": -11516.666015625
+  },
+  "38": {
+    "id": 35,
+    "mapID": 0,
+    "areaID": 38,
+    "name": "LochModan",
+    "locLeft": -1993.7498779296875,
+    "locRight": -4752.0830078125,
+    "locTop": -4487.5,
+    "locBottom": -6327.0830078125
+  },
+  "44": {
+    "id": 36,
+    "mapID": 0,
+    "areaID": 44,
+    "name": "Redridge",
+    "locLeft": -1570.833251953125,
+    "locRight": -3741.66650390625,
+    "locTop": -8575.0,
+    "locBottom": -10022.916015625
+  },
+  "33": {
+    "id": 37,
+    "mapID": 0,
+    "areaID": 33,
+    "name": "Stranglethorn",
+    "locLeft": 2220.833251953125,
+    "locRight": -4160.41650390625,
+    "locTop": -11168.75,
+    "locBottom": -15422.916015625
+  },
+  "8": {
+    "id": 38,
+    "mapID": 0,
+    "areaID": 8,
+    "name": "SwampOfSorrows",
+    "locLeft": -2222.91650390625,
+    "locRight": -4516.66650390625,
+    "locTop": -9620.8330078125,
+    "locBottom": -11150.0
+  },
+  "40": {
+    "id": 39,
+    "mapID": 0,
+    "areaID": 40,
+    "name": "Westfall",
+    "locLeft": 3016.66650390625,
+    "locRight": -483.33331298828125,
+    "locTop": -9400.0,
+    "locBottom": -11733.3330078125
+  },
+  "11": {
+    "id": 40,
+    "mapID": 0,
+    "areaID": 11,
+    "name": "Wetlands",
+    "locLeft": -389.58331298828125,
+    "locRight": -4525.0,
+    "locTop": -2147.91650390625,
+    "locBottom": -4904.16650390625
+  },
+  "141": {
+    "id": 41,
+    "mapID": 1,
+    "areaID": 141,
+    "name": "Teldrassil",
+    "locLeft": 3814.583251953125,
+    "locRight": -1277.083251953125,
+    "locTop": 11831.25,
+    "locBottom": 8437.5
+  },
+  "148": {
+    "id": 42,
+    "mapID": 1,
+    "areaID": 148,
+    "name": "Darkshore",
+    "locLeft": 2941.66650390625,
+    "locRight": -3608.333251953125,
+    "locTop": 8333.3330078125,
+    "locBottom": 3966.66650390625
+  },
+  "331": {
+    "id": 43,
+    "mapID": 1,
+    "areaID": 331,
+    "name": "Ashenvale",
+    "locLeft": 1699.9998779296875,
+    "locRight": -4066.66650390625,
+    "locTop": 4672.91650390625,
+    "locBottom": 829.1666259765625
+  },
+  "400": {
+    "id": 61,
+    "mapID": 1,
+    "areaID": 400,
+    "name": "ThousandNeedles",
+    "locLeft": -433.33331298828125,
+    "locRight": -4833.3330078125,
+    "locTop": -3966.66650390625,
+    "locBottom": -6899.99951171875
+  },
+  "406": {
+    "id": 81,
+    "mapID": 1,
+    "areaID": 406,
+    "name": "StonetalonMountains",
+    "locLeft": 3245.833251953125,
+    "locRight": -1637.4998779296875,
+    "locTop": 2916.66650390625,
+    "locBottom": -339.58331298828125
+  },
+  "405": {
+    "id": 101,
+    "mapID": 1,
+    "areaID": 405,
+    "name": "Desolace",
+    "locLeft": 4233.3330078125,
+    "locRight": -262.5,
+    "locTop": 452.08331298828125,
+    "locBottom": -2545.833251953125
+  },
+  "357": {
+    "id": 121,
+    "mapID": 1,
+    "areaID": 357,
+    "name": "Feralas",
+    "locLeft": 5441.66650390625,
+    "locRight": -1508.333251953125,
+    "locTop": -2366.66650390625,
+    "locBottom": -6999.99951171875
+  },
+  "15": {
+    "id": 141,
+    "mapID": 1,
+    "areaID": 15,
+    "name": "Dustwallow",
+    "locLeft": -974.9999389648438,
+    "locRight": -6225.0,
+    "locTop": -2033.333251953125,
+    "locBottom": -5533.3330078125
+  },
+  "440": {
+    "id": 161,
+    "mapID": 1,
+    "areaID": 440,
+    "name": "Tanaris",
+    "locLeft": -218.74998474121094,
+    "locRight": -7118.74951171875,
+    "locTop": -5875.0,
+    "locBottom": -10475.0
+  },
+  "16": {
+    "id": 181,
+    "mapID": 1,
+    "areaID": 16,
+    "name": "Aszhara",
+    "locLeft": -3277.083251953125,
+    "locRight": -8347.916015625,
+    "locTop": 5341.66650390625,
+    "locBottom": 1960.4166259765625
+  },
+  "361": {
+    "id": 182,
+    "mapID": 1,
+    "areaID": 361,
+    "name": "Felwood",
+    "locLeft": 1641.6666259765625,
+    "locRight": -4108.3330078125,
+    "locTop": 7133.3330078125,
+    "locBottom": 3299.999755859375
+  },
+  "490": {
+    "id": 201,
+    "mapID": 1,
+    "areaID": 490,
+    "name": "UngoroCrater",
+    "locLeft": 533.3333129882812,
+    "locRight": -3166.66650390625,
+    "locTop": -5966.66650390625,
+    "locBottom": -8433.3330078125
+  },
+  "493": {
+    "id": 241,
+    "mapID": 1,
+    "areaID": 493,
+    "name": "Moonglade",
+    "locLeft": -1381.25,
+    "locRight": -3689.583251953125,
+    "locTop": 8491.666015625,
+    "locBottom": 6952.0830078125
+  },
+  "1377": {
+    "id": 261,
+    "mapID": 1,
+    "areaID": 1377,
+    "name": "Silithus",
+    "locLeft": 2537.5,
+    "locRight": -945.833984375,
+    "locTop": -5958.333984375,
+    "locBottom": -8281.25
+  },
+  "618": {
+    "id": 281,
+    "mapID": 1,
+    "areaID": 618,
+    "name": "Winterspring",
+    "locLeft": -316.6666564941406,
+    "locRight": -7416.66650390625,
+    "locTop": 8533.3330078125,
+    "locBottom": 3799.999755859375
+  },
+  "1519": {
+    "id": 301,
+    "mapID": 0,
+    "areaID": 1519,
+    "name": "Stormwind",
+    "locLeft": 1722.9166259765625,
+    "locRight": -14.583333015441895,
+    "locTop": -7995.8330078125,
+    "locBottom": -9154.166015625
+  },
+  "1637": {
+    "id": 321,
+    "mapID": 1,
+    "areaID": 1637,
+    "name": "Ogrimmar",
+    "locLeft": -3680.60107421875,
+    "locRight": -5083.20556640625,
+    "locTop": 2273.877197265625,
+    "locBottom": 1338.4605712890625
+  },
+  "1537": {
+    "id": 341,
+    "mapID": 0,
+    "areaID": 1537,
+    "name": "Ironforge",
+    "locLeft": -713.5913696289062,
+    "locRight": -1504.2164306640625,
+    "locTop": -4569.2412109375,
+    "locBottom": -5096.845703125
+  },
+  "1638": {
+    "id": 362,
+    "mapID": 1,
+    "areaID": 1638,
+    "name": "ThunderBluff",
+    "locLeft": 516.6666259765625,
+    "locRight": -527.0833129882812,
+    "locTop": -849.9999389648438,
+    "locBottom": -1545.833251953125
+  },
+  "1657": {
+    "id": 381,
+    "mapID": 1,
+    "areaID": 1657,
+    "name": "Darnassis",
+    "locLeft": 2938.36279296875,
+    "locRight": 1880.029541015625,
+    "locTop": 10238.31640625,
+    "locBottom": 9532.5869140625
+  },
+  "1497": {
+    "id": 382,
+    "mapID": 0,
+    "areaID": 1497,
+    "name": "Undercity",
+    "locLeft": 873.192626953125,
+    "locRight": -86.18240356445312,
+    "locTop": 1877.9453125,
+    "locBottom": 1237.8411865234375
+  },
+  "2597": {
+    "id": 401,
+    "mapID": 30,
+    "areaID": 2597,
+    "name": "AlteracValley",
+    "locLeft": 1781.2498779296875,
+    "locRight": -2456.25,
+    "locTop": 1085.4166259765625,
+    "locBottom": -1739.583251953125
+  },
+  "3277": {
+    "id": 443,
+    "mapID": 489,
+    "areaID": 3277,
+    "name": "WarsongGulch",
+    "locLeft": 2041.6666259765625,
+    "locRight": 895.8333129882812,
+    "locTop": 1627.083251953125,
+    "locBottom": 862.4999389648438
+  },
+  "3358": {
+    "id": 461,
+    "mapID": 529,
+    "areaID": 3358,
+    "name": "ArathiBasin",
+    "locLeft": 1858.333251953125,
+    "locRight": 102.08332824707031,
+    "locTop": 1508.333251953125,
+    "locBottom": 337.5
+  },
+  "3430": {
+    "id": 462,
+    "mapID": 530,
+    "areaID": 3430,
+    "name": "EversongWoods",
+    "locLeft": -4487.5,
+    "locRight": -9412.5,
+    "locTop": 11041.666015625,
+    "locBottom": 7758.3330078125
+  },
+  "3433": {
+    "id": 463,
+    "mapID": 530,
+    "areaID": 3433,
+    "name": "Ghostlands",
+    "locLeft": -5283.3330078125,
+    "locRight": -8583.3330078125,
+    "locTop": 8266.666015625,
+    "locBottom": 6066.66650390625
+  },
+  "3524": {
+    "id": 464,
+    "mapID": 530,
+    "areaID": 3524,
+    "name": "AzuremystIsle",
+    "locLeft": -10500.0,
+    "locRight": -14570.8330078125,
+    "locTop": -2793.75,
+    "locBottom": -5508.3330078125
+  },
+  "3483": {
+    "id": 465,
+    "mapID": 530,
+    "areaID": 3483,
+    "name": "Hellfire",
+    "locLeft": 5539.5830078125,
+    "locRight": 375.0,
+    "locTop": 1481.25,
+    "locBottom": -1962.4998779296875
+  },
+  "3521": {
+    "id": 467,
+    "mapID": 530,
+    "areaID": 3521,
+    "name": "Zangarmarsh",
+    "locLeft": 9475.0,
+    "locRight": 4447.91650390625,
+    "locTop": 1935.4166259765625,
+    "locBottom": -1416.6666259765625
+  },
+  "3557": {
+    "id": 471,
+    "mapID": 530,
+    "areaID": 3557,
+    "name": "TheExodar",
+    "locLeft": -11066.3671875,
+    "locRight": -12123.1376953125,
+    "locTop": -3609.683349609375,
+    "locBottom": -4314.37109375
+  },
+  "3520": {
+    "id": 473,
+    "mapID": 530,
+    "areaID": 3520,
+    "name": "ShadowmoonValley",
+    "locLeft": 4225.0,
+    "locRight": -1275.0,
+    "locTop": -1947.9166259765625,
+    "locBottom": -5614.5830078125
+  },
+  "3522": {
+    "id": 475,
+    "mapID": 530,
+    "areaID": 3522,
+    "name": "BladesEdgeMountains",
+    "locLeft": 8845.8330078125,
+    "locRight": 3420.833251953125,
+    "locTop": 4408.3330078125,
+    "locBottom": 791.6666259765625
+  },
+  "3525": {
+    "id": 476,
+    "mapID": 530,
+    "areaID": 3525,
+    "name": "BloodmystIsle",
+    "locLeft": -10075.0,
+    "locRight": -13337.4990234375,
+    "locTop": -758.3333129882812,
+    "locBottom": -2933.333251953125
+  },
+  "3518": {
+    "id": 477,
+    "mapID": 530,
+    "areaID": 3518,
+    "name": "Nagrand",
+    "locLeft": 10295.8330078125,
+    "locRight": 4770.8330078125,
+    "locTop": 41.666664123535156,
+    "locBottom": -3641.66650390625
+  },
+  "3519": {
+    "id": 478,
+    "mapID": 530,
+    "areaID": 3519,
+    "name": "TerokkarForest",
+    "locLeft": 7083.3330078125,
+    "locRight": 1683.333251953125,
+    "locTop": -999.9999389648438,
+    "locBottom": -4600.0
+  },
+  "3523": {
+    "id": 479,
+    "mapID": 530,
+    "areaID": 3523,
+    "name": "Netherstorm",
+    "locLeft": 5483.3330078125,
+    "locRight": -91.66666412353516,
+    "locTop": 5456.25,
+    "locBottom": 1739.583251953125
+  },
+  "3487": {
+    "id": 480,
+    "mapID": 530,
+    "areaID": 3487,
+    "name": "SilvermoonCity",
+    "locLeft": -6400.75,
+    "locRight": -7612.20849609375,
+    "locTop": 10153.708984375,
+    "locBottom": 9346.9384765625
+  },
+  "3703": {
+    "id": 481,
+    "mapID": 530,
+    "areaID": 3703,
+    "name": "ShattrathCity",
+    "locLeft": 6135.2587890625,
+    "locRight": 4829.0087890625,
+    "locTop": -1473.9544677734375,
+    "locBottom": -2344.787841796875
+  },
+  "3820": {
+    "id": 482,
+    "mapID": 566,
+    "areaID": 3820,
+    "name": "NetherstormArena",
+    "locLeft": 2660.41650390625,
+    "locRight": 389.58331298828125,
+    "locTop": 2918.75,
+    "locBottom": 1404.1666259765625
+  },
+  "3537": {
+    "id": 486,
+    "mapID": 571,
+    "areaID": 3537,
+    "name": "BoreanTundra",
+    "locLeft": 8570.8330078125,
+    "locRight": 2806.25,
+    "locTop": 4897.91650390625,
+    "locBottom": 1054.1666259765625
+  },
+  "65": {
+    "id": 488,
+    "mapID": 571,
+    "areaID": 65,
+    "name": "Dragonblight",
+    "locLeft": 3627.083251953125,
+    "locRight": -1981.2498779296875,
+    "locTop": 5575.0,
+    "locBottom": 1835.4166259765625
+  },
+  "394": {
+    "id": 490,
+    "mapID": 571,
+    "areaID": 394,
+    "name": "GrizzlyHills",
+    "locLeft": -1110.4166259765625,
+    "locRight": -6360.41650390625,
+    "locTop": 5516.66650390625,
+    "locBottom": 2016.6666259765625
+  },
+  "495": {
+    "id": 491,
+    "mapID": 571,
+    "areaID": 495,
+    "name": "HowlingFjord",
+    "locLeft": -1397.9166259765625,
+    "locRight": -7443.74951171875,
+    "locTop": 3116.66650390625,
+    "locBottom": -914.5833129882812
+  },
+  "210": {
+    "id": 492,
+    "mapID": 571,
+    "areaID": 210,
+    "name": "IcecrownGlacier",
+    "locLeft": 5443.75,
+    "locRight": -827.0833129882812,
+    "locTop": 9427.0830078125,
+    "locBottom": 5245.8330078125
+  },
+  "3711": {
+    "id": 493,
+    "mapID": 571,
+    "areaID": 3711,
+    "name": "SholazarBasin",
+    "locLeft": 6929.16650390625,
+    "locRight": 2572.91650390625,
+    "locTop": 7287.49951171875,
+    "locBottom": 4383.3330078125
+  },
+  "67": {
+    "id": 495,
+    "mapID": 571,
+    "areaID": 67,
+    "name": "TheStormPeaks",
+    "locLeft": 1841.6666259765625,
+    "locRight": -5270.8330078125,
+    "locTop": 10197.916015625,
+    "locBottom": 5456.25
+  },
+  "66": {
+    "id": 496,
+    "mapID": 571,
+    "areaID": 66,
+    "name": "ZulDrak",
+    "locLeft": -600.0,
+    "locRight": -5593.75,
+    "locTop": 7668.74951171875,
+    "locBottom": 4339.5830078125
+  },
+  "4080": {
+    "id": 499,
+    "mapID": 530,
+    "areaID": 4080,
+    "name": "Sunwell",
+    "locLeft": -5302.0830078125,
+    "locRight": -8629.166015625,
+    "locTop": 13568.7490234375,
+    "locBottom": 11350.0
+  },
+  "4197": {
+    "id": 501,
+    "mapID": 571,
+    "areaID": 4197,
+    "name": "LakeWintergrasp",
+    "locLeft": 4329.16650390625,
+    "locRight": 1354.1666259765625,
+    "locTop": 5716.66650390625,
+    "locBottom": 3733.333251953125
+  },
+  "4298": {
+    "id": 502,
+    "mapID": 609,
+    "areaID": 4298,
+    "name": "ScarletEnclave",
+    "locLeft": -4047.91650390625,
+    "locRight": -7210.41650390625,
+    "locTop": 3087.5,
+    "locBottom": 979.1666259765625
+  },
+  "4395": {
+    "id": 504,
+    "mapID": 571,
+    "areaID": 4395,
+    "name": "Dalaran",
+    "locLeft": 0.0,
+    "locRight": 0.0,
+    "locTop": 0.0,
+    "locBottom": 0.0
+  },
+  "2817": {
+    "id": 510,
+    "mapID": 571,
+    "areaID": 2817,
+    "name": "CrystalsongForest",
+    "locLeft": 1443.75,
+    "locRight": -1279.1666259765625,
+    "locTop": 6502.0830078125,
+    "locBottom": 4687.5
+  },
+  "4384": {
+    "id": 512,
+    "mapID": 607,
+    "areaID": 4384,
+    "name": "StrandoftheAncients",
+    "locLeft": 787.5,
+    "locRight": -956.2499389648438,
+    "locTop": 1883.333251953125,
+    "locBottom": 720.8333129882812
+  },
+  "4265": {
+    "id": 520,
+    "mapID": 576,
+    "areaID": 4265,
+    "name": "TheNexus",
+    "locLeft": 0.0,
+    "locRight": 0.0,
+    "locTop": 0.0,
+    "locBottom": 0.0
+  },
+  "4100": {
+    "id": 521,
+    "mapID": 595,
+    "areaID": 4100,
+    "name": "CoTStratholme",
+    "locLeft": 2152.083251953125,
+    "locRight": 327.08331298828125,
+    "locTop": 2297.91650390625,
+    "locBottom": 1081.25
+  },
+  "4494": {
+    "id": 522,
+    "mapID": 619,
+    "areaID": 4494,
+    "name": "Ahnkahet",
+    "locLeft": -233.3333282470703,
+    "locRight": -1206.25,
+    "locTop": 849.9999389648438,
+    "locBottom": 202.0833282470703
+  },
+  "206": {
+    "id": 523,
+    "mapID": 574,
+    "areaID": 206,
+    "name": "UtgardeKeep",
+    "locLeft": 0.0,
+    "locRight": 0.0,
+    "locTop": 0.0,
+    "locBottom": 0.0
+  },
+  "1196": {
+    "id": 524,
+    "mapID": 575,
+    "areaID": 1196,
+    "name": "UtgardePinnacle",
+    "locLeft": 3274.999755859375,
+    "locRight": -3274.999755859375,
+    "locTop": 2166.66650390625,
+    "locBottom": -2200.0
+  },
+  "4272": {
+    "id": 525,
+    "mapID": 602,
+    "areaID": 4272,
+    "name": "HallsofLightning",
+    "locLeft": 2500.0,
+    "locRight": -899.9999389648438,
+    "locTop": 2200.0,
+    "locBottom": -66.66666412353516
+  },
+  "4264": {
+    "id": 526,
+    "mapID": 599,
+    "areaID": 4264,
+    "name": "Ulduar77",
+    "locLeft": 2766.66650390625,
+    "locRight": -633.3333129882812,
+    "locTop": 2200.0,
+    "locBottom": -66.66666412353516
+  },
+  "4500": {
+    "id": 527,
+    "mapID": 616,
+    "areaID": 4500,
+    "name": "TheEyeofEternity",
+    "locLeft": 2766.66650390625,
+    "locRight": -633.3333129882812,
+    "locTop": 2200.0,
+    "locBottom": -66.66666412353516
+  },
+  "4228": {
+    "id": 528,
+    "mapID": 578,
+    "areaID": 4228,
+    "name": "Nexus80",
+    "locLeft": 2337.5,
+    "locRight": -262.5,
+    "locTop": 1956.2498779296875,
+    "locBottom": 222.91665649414062
+  },
+  "4273": {
+    "id": 529,
+    "mapID": 603,
+    "areaID": 4273,
+    "name": "Ulduar",
+    "locLeft": 1583.333251953125,
+    "locRight": -1704.1666259765625,
+    "locTop": 1168.75,
+    "locBottom": -1022.9166259765625
+  },
+  "4416": {
+    "id": 530,
+    "mapID": 604,
+    "areaID": 4416,
+    "name": "Gundrak",
+    "locLeft": 1310.4166259765625,
+    "locRight": 166.66665649414062,
+    "locTop": 2122.91650390625,
+    "locBottom": 1360.4166259765625
+  },
+  "4493": {
+    "id": 531,
+    "mapID": 615,
+    "areaID": 4493,
+    "name": "TheObsidianSanctum",
+    "locLeft": 1133.333251953125,
+    "locRight": -29.16666603088379,
+    "locTop": 3616.66650390625,
+    "locBottom": 2841.66650390625
+  },
+  "4603": {
+    "id": 532,
+    "mapID": 624,
+    "areaID": 4603,
+    "name": "VaultofArchavon",
+    "locLeft": 1033.333251953125,
+    "locRight": -1566.6666259765625,
+    "locTop": 600.0,
+    "locBottom": -1133.333251953125
+  },
+  "4277": {
+    "id": 533,
+    "mapID": 601,
+    "areaID": 4277,
+    "name": "AzjolNerub",
+    "locLeft": 1020.8333129882812,
+    "locRight": -52.08333206176758,
+    "locTop": 872.9166259765625,
+    "locBottom": 158.3333282470703
+  },
+  "4196": {
+    "id": 534,
+    "mapID": 600,
+    "areaID": 4196,
+    "name": "DrakTharonKeep",
+    "locLeft": -377.08331298828125,
+    "locRight": -1004.1666259765625,
+    "locTop": -168.75,
+    "locBottom": -587.5
+  },
+  "3456": {
+    "id": 535,
+    "mapID": 533,
+    "areaID": 3456,
+    "name": "Naxxramas",
+    "locLeft": -2520.833251953125,
+    "locRight": -4377.0830078125,
+    "locTop": 3597.91650390625,
+    "locBottom": 2360.41650390625
+  },
+  "4415": {
+    "id": 536,
+    "mapID": 608,
+    "areaID": 4415,
+    "name": "VioletHold",
+    "locLeft": 983.3333129882812,
+    "locRight": 600.0,
+    "locTop": 2006.2498779296875,
+    "locBottom": 1749.9998779296875
+  },
+  "4710": {
+    "id": 540,
+    "mapID": 628,
+    "areaID": 4710,
+    "name": "IsleofConquest",
+    "locLeft": 525.0,
+    "locRight": -2125.0,
+    "locTop": 1708.333251953125,
+    "locBottom": -58.33333206176758
+  },
+  "4742": {
+    "id": 541,
+    "mapID": 571,
+    "areaID": 4742,
+    "name": "HrothgarsLanding",
+    "locLeft": 2797.91650390625,
+    "locRight": -879.1666259765625,
+    "locTop": 10781.25,
+    "locBottom": 8329.166015625
+  },
+  "4723": {
+    "id": 542,
+    "mapID": 650,
+    "areaID": 4723,
+    "name": "TheArgentColiseum",
+    "locLeft": 2100.0,
+    "locRight": -499.9999694824219,
+    "locTop": 2200.0,
+    "locBottom": 466.6666564941406
+  },
+  "4722": {
+    "id": 543,
+    "mapID": 649,
+    "areaID": 4722,
+    "name": "TheArgentColiseum",
+    "locLeft": 2100.0,
+    "locRight": -499.9999694824219,
+    "locTop": 2200.0,
+    "locBottom": 466.6666564941406
+  },
+  "4809": {
+    "id": 601,
+    "mapID": 632,
+    "areaID": 4809,
+    "name": "TheForgeofSouls",
+    "locLeft": 7033.3330078125,
+    "locRight": -4366.66650390625,
+    "locTop": 6466.66650390625,
+    "locBottom": -1133.333251953125
+  },
+  "4813": {
+    "id": 602,
+    "mapID": 658,
+    "areaID": 4813,
+    "name": "PitofSaron",
+    "locLeft": 839.5833129882812,
+    "locRight": -693.75,
+    "locTop": 1256.25,
+    "locBottom": 233.3333282470703
+  },
+  "4820": {
+    "id": 603,
+    "mapID": 668,
+    "areaID": 4820,
+    "name": "HallsofReflection",
+    "locLeft": 7033.3330078125,
+    "locRight": -5966.66650390625,
+    "locTop": 6466.66650390625,
+    "locBottom": -2200.0
+  },
+  "4812": {
+    "id": 604,
+    "mapID": 631,
+    "areaID": 4812,
+    "name": "IcecrownCitadel",
+    "locLeft": 6366.66650390625,
+    "locRight": -5833.3330078125,
+    "locTop": 5933.3330078125,
+    "locBottom": -2200.0
+  },
+  "4987": {
+    "id": 609,
+    "mapID": 724,
+    "areaID": 4987,
+    "name": "TheRubySanctum",
+    "locLeft": 902.0833129882812,
+    "locRight": 150.0,
+    "locTop": 3429.16650390625,
+    "locBottom": 2927.083251953125
+  }
+}
