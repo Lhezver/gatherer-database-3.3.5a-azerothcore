@@ -1,0 +1,22 @@
+{
+  "name": "gatherer-database-3.3.5a-azerothcore",
+  "version": "1.0.0",
+  "description": "Database generator for the Gatherer addon (version 3.1.16). Data obtained from AzerothCore.",
+  "main": "generate_gatherer.js",
+  "scripts": {
+    "start": "node generate_gatherer.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lhezver/gatherer-database-3.3.5a-azerothcore.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Lhezver/gatherer-database-3.3.5a-azerothcore/issues"
+  },
+  "homepage": "https://github.com/Lhezver/gatherer-database-3.3.5a-azerothcore#readme",
+  "dependencies": {
+    "mysql2": "^3.24.5"
+  }
+}
