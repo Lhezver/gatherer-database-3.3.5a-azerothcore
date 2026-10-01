@@ -1,7 +1,7 @@
 const fs = require('fs');
 const mysql = require('mysql2/promise');
 
-// Configuración de la base de datos
+// ---------- Configuración de la base de datos
 const dbConfig = {
     host: '127.0.0.1',
     port: 3306,
@@ -9,6 +9,121 @@ const dbConfig = {
     user: 'acore',
     password: 'acore'
 };
+
+// ---------- Nombres de zona tal como los usa Gatherer (por areaID)
+const ZONE_NAMES = {
+    // Kalimdor
+    14: 'Durotar', 215: 'Mulgore', 17: 'Barrens', 141: 'Teldrassil', 148: 'Darkshore',
+    331: 'Ashenvale', 400: 'Thousand Needles', 406: 'Stonetalon Mountains', 405: 'Desolace',
+    357: 'Feralas', 15: 'Dustwallow Marsh', 440: 'Tanaris', 16: 'Azshara', 361: 'Felwood',
+    490: "Ungoro Crater", 493: 'Moonglade', 1377: 'Silithus', 618: 'Winterspring',
+    1637: 'Orgrimmar', 1638: 'Thunder Bluff', 1657: 'Darnassus',
+    // Reinos del Este
+    36: 'Alterac Mountains', 45: 'Arathi Highlands', 3: 'Badlands', 4: 'Blasted Lands',
+    85: 'Tirisfal Glades', 130: 'Silverpine Forest', 28: 'Western Plaguelands',
+    139: 'Eastern Plaguelands', 267: 'Hillsbrad Foothills', 47: 'Hinterlands',
+    1: 'Dun Morogh', 51: 'Searing Gorge', 46: 'Burning Steppes', 12: 'Elwynn Forest',
+    41: 'Deadwind Pass', 10: 'Duskwood', 38: 'Loch Modan', 44: 'Redridge Mountains',
+    33: 'Stranglethorn Vale', 8: 'Swamp of Sorrows', 40: 'Westfall', 11: 'Wetlands',
+    1519: 'Stormwind City', 1537: 'Ironforge', 1497: 'Undercity',
+    // Terrallende (+ zonas de Quel'Thalas / Azuremyst en el mapa 530)
+    3430: 'Eversong Woods', 3433: 'Ghostlands', 4080: "Isle of Quel'Danas", 3487: 'Silvermoon City',
+    3524: 'Azuremyst Isle', 3525: 'Bloodmyst Isle', 3557: 'The Exodar',
+    3483: 'Hellfire Peninsula', 3521: 'Zangarmarsh', 3520: 'Shadowmoon Valley',
+    3522: "Blade's Edge Mountains", 3518: 'Nagrand', 3519: 'Terokkar Forest',
+    3523: 'Netherstorm', 3703: 'Shattrath City',
+    // Rasganorte
+    3537: 'Borean Tundra', 65: 'Dragonblight', 394: 'Grizzly Hills', 495: 'Howling Fjord',
+    210: 'Icecrown Glacier', 3711: 'Sholazar Basin', 67: 'The Storm Peaks', 66: "Zuldrak",
+    4197: 'Wintergrasp', 2817: 'Crystalsong Forest', 4742: "Hrothgar's Landing"
+};
+
+function getZoneName(area) {
+    const name = ZONE_NAMES[area.areaID]
+        ?? area.name.replace(/([a-z])([A-Z])/g, '$1 $2'); // fallback: "EversongWoods" -> "Eversong Woods"
+    return name.toUpperCase().replace(/\s+/g, '_');
+}
+
+// ---------- Excepciones: nombre del objeto -> ID que usa Gatherer
+// Por defecto se usa el menor entry de gameobject_template con ese nombre
+// (Copper Vein -> 1731, Mithril Deposit -> 2040). Si alguna veta sale con un ID
+// distinto al de tu Gatherer.lua real, añádela aquí.
+const NODE_ID_OVERRIDES = {
+    // 'Nombre del objeto': 12345,
+};
+
+// ---------- Continentes (índice del cliente: 1=Kalimdor, 2=Reinos del Este, 3=Terrallende, 4=Rasganorte)
+const EK_IN_530 = new Set([3430, 3433, 4080, 3487]);   // Eversong, Ghostlands, Quel'Danas, Silvermoon
+const KAL_IN_530 = new Set([3524, 3525, 3557]);        // Azuremyst, Bloodmyst, Exodar
+
+function getContinent(mapId, zoneId) {
+    if (mapId === 0) return 2;
+    if (mapId === 1) return 1;
+    if (mapId === 571) return 4;
+    if (mapId === 530) {
+        if (EK_IN_530.has(zoneId)) return 2;
+        if (KAL_IN_530.has(zoneId)) return 1;
+        return 3;
+    }
+    return null; // instancias, battlegrounds, etc.
+}
+
+// ---------- Conversión de coordenadas mundo -> mapa de zona (0..1)
+const inRange = v => v >= 0 && v <= 1;
+
+function worldToMap(a, x, y) {
+    const mx = (a.locLeft - y) / (a.locLeft - a.locRight);
+    const my = (a.locTop - x) / (a.locTop - a.locBottom);
+    if (!inRange(mx) || !inRange(my)) return null;
+    return { mx, my };
+}
+
+// ---------- Utilidades Lua
+const T = n => '\t'.repeat(n);
+
+const MINE_ITEMS = {
+    2770: 'Copper Ore', 2771: 'Tin Ore', 2772: 'Iron Ore', 2775: 'Silver Ore',
+    2776: 'Gold Ore', 3858: 'Mithril Ore', 7911: 'Truesilver Ore',
+    10620: 'Thorium Ore', 11370: 'Dark Iron Ore'
+};
+const HERB_ITEMS = {
+    3357: 'Liferoot', 2452: 'Swiftthistle', 3358: "Khadgar's Whisker", 13463: 'Dreamfoil',
+    13464: 'Golden Sansam', 13465: 'Mountain Silversage', 13466: 'Plaguebloom',
+    8836: "Arthas' Tears", 13467: 'Icecap', 13468: 'Black Lotus', 8838: 'Sungrass',
+    8839: 'Blindweed', 8153: 'Wildvine', 2447: 'Peacebloom', 3369: 'Grave Moss',
+    765: 'Silverleaf', 8846: 'Gromsblood', 3819: 'Wintersbite', 785: 'Mageroyal',
+    3355: 'Wild Steelbloom', 3820: 'Stranglekelp', 2450: 'Briarthorn', 2453: 'Bruiseweed',
+    3356: 'Kingsblood', 3818: 'Fadeleaf', 3821: 'Goldthorn', 2449: 'Earthroot',
+    8845: 'Ghost Mushroom', 4625: 'Firebloom', 8831: 'Purple Lotus'
+};
+
+function buildLibSwagData() {
+    let s = 'LibSwagData = {\n';
+    s += `${T(1)}["items"] = {\n`;
+    const all = [
+        ...Object.entries(HERB_ITEMS).map(([id, n]) => [id, 'HERB', n]),
+        ...Object.entries(MINE_ITEMS).map(([id, n]) => [id, 'MINE', n])
+    ];
+    for (const [id, cat, name] of all) {
+        s += `${T(2)}[${id}] = {\n${T(3)}["cat"] = "${cat}",\n${T(3)}["name"] = "${name}",\n${T(2)}},\n`;
+    }
+    s += `${T(1)}},\n`;
+    s += `${T(1)}["HERB"] = {\n${T(1)}},\n`;
+    s += `${T(1)}["cats"] = {\n`;
+    for (const [cat, list] of [['MINE', MINE_ITEMS], ['HERB', HERB_ITEMS]]) {
+        s += `${T(2)}["${cat}"] = {\n`;
+        for (const [id, name] of Object.entries(list)) {
+            s += `${T(3)}["${name}"] = ${id},\n`;
+        }
+        s += `${T(2)}},\n`;
+    }
+    s += `${T(1)}},\n`;
+    s += `${T(1)}["spells"] = {\n${T(1)}},\n`;
+    s += `${T(1)}["MINE"] = {\n${T(1)}},\n`;
+    s += `${T(1)}["ai"] = {\n${T(1)}},\n`;
+    s += '}\n';
+    return s;
+}
 
 async function generateGatherer() {
     let connection;
@@ -18,19 +133,31 @@ async function generateGatherer() {
 
         console.log('Leyendo WorldMapArea.json...');
         if (!fs.existsSync('WorldMapArea.json')) {
-            throw new Error("No se encuentra el archivo WorldMapArea.json en el directorio actual.");
+            throw new Error('No se encuentra el archivo WorldMapArea.json en el directorio actual.');
         }
         const worldMapArea = JSON.parse(fs.readFileSync('WorldMapArea.json', 'utf8'));
 
-        // Convertir el objeto JSON en un array para facilitar las búsquedas con .find()
-        const areas = Object.values(worldMapArea);
+        // Solo zonas reales (areaID != 0) con límites válidos (descarta Dalaran, Nexus, etc. con todo a 0)
+        const areas = Object.values(worldMapArea).filter(a =>
+            a.areaID !== 0 && a.locLeft !== a.locRight && a.locTop !== a.locBottom
+        );
+
+        // Índice rápido: "map:area" -> lista de entradas
+        const areaIndex = new Map();
+        for (const a of areas) {
+            const key = `${a.mapID}:${a.areaID}`;
+            if (!areaIndex.has(key)) areaIndex.set(key, []);
+            areaIndex.get(key).push(a);
+        }
 
         console.log('Ejecutando consulta SQL...');
         const query = `
-            SELECT 
-                g.guid, g.id, g.map, g.zoneId, g.areaId, 
-                g.position_x, g.position_y, g.position_z, 
-                t.name AS object_name, t.type
+            SELECT g.guid, g.id, g.map, g.zoneId, g.areaId,
+                   g.position_x, g.position_y, g.position_z,
+                   t.name AS object_name, t.type,
+                   (SELECT MIN(t2.entry)
+                      FROM acore_world.gameobject_template t2
+                     WHERE t2.name = t.name AND t2.type = 3) AS canonical_entry
             FROM acore_world.gameobject g
             JOIN acore_world.gameobject_template t ON g.id = t.entry
             WHERE t.type = 3;
@@ -38,205 +165,83 @@ async function generateGatherer() {
         const [rows] = await connection.execute(query);
         console.log(`Se encontraron ${rows.length} objetos mineros.`);
 
-        // Estructura para agrupar: zonesData[zoneName][entry] = [ nodes... ]
-        const zonesData = {};
+        // continents[idx][zoneName][entry] = [nodos]
+        const continents = {};
+        const timestamp = Math.floor(Date.now() / 1000);
+        let skipped = 0;
 
         for (const row of rows) {
-            // 1. Buscar coincidencia exacta de zona/área asegurando que el mapa coincida (a.mapID === g.map)
-            let areaInfo = areas.find(a =>
-                (a.areaID === row.zoneId || a.areaID === row.areaId) && a.mapID === row.map
-            );
+            const zone = row.zoneId || row.areaId;
+            const continent = getContinent(row.map, zone);
+            if (!continent) { skipped++; continue; }
 
-            // 2. Fallback: Si no se encuentra la subzona específica, buscar el mapa base/continente (donde areaID es 0)
-            if (!areaInfo) {
-                areaInfo = areas.find(a => a.mapID === row.map && a.areaID === 0);
+            const candidates = [
+                ...(areaIndex.get(`${row.map}:${row.zoneId}`) || []),
+                ...(areaIndex.get(`${row.map}:${row.areaId}`) || [])
+            ];
+
+            let result = null, areaInfo = null;
+            for (const a of candidates) {
+                const r = worldToMap(a, row.position_x, row.position_y);
+                if (r) { result = r; areaInfo = a; break; }
             }
+            if (!result) { skipped++; continue; }
 
-            // Si no hay ninguna coincidencia válida de mapa y zona, se omite el nodo
-            if (!areaInfo) continue;
+            const zoneName = getZoneName(areaInfo);
+            // Gatherer agrupa por tipo de nodo (ej. todas las "Mithril Deposit" bajo 2040),
+            // no por el entry concreto del gameobject.
+            const entry = NODE_ID_OVERRIDES[row.object_name] ?? row.canonical_entry ?? row.id;
 
-            const zoneName = areaInfo.name.toUpperCase();
-            const entry = row.id;
-
-            const locLeft = areaInfo.locLeft;
-            const locRight = areaInfo.locRight;
-            const locTop = areaInfo.locTop;
-            const locBottom = areaInfo.locBottom;
-
-            // Corrección de coordenadas:
-            // [1] Horizontal (Eje Este/Oeste -> usa position_y, locLeft, locRight)
-            // [2] Vertical (Eje Norte/Sur -> usa position_x, locTop, locBottom)
-            const mapX = (locLeft - row.position_y) / (locLeft - locRight);
-            const mapY = (locTop - row.position_x) / (locTop - locBottom);
-
-            if (mapX < 0 || mapX > 1 || mapY < 0 || mapY > 1) continue;
-
-            if (!zonesData[zoneName]) {
-                zonesData[zoneName] = {
-                    gtype: "MINE"
-                };
-            }
-
-            if (!zonesData[zoneName][entry]) {
-                zonesData[zoneName][entry] = [];
-            }
-
-            const timestamp = Math.floor(Date.now() / 1000);
-            zonesData[zoneName][entry].push([
-                Number(mapX.toFixed(14)), // [1] Horizontal
-                Number(mapY.toFixed(14)), // [2] Vertical
-                0,
-                timestamp,
-                0,
-                "Azerothcore"
+            continents[continent] ??= {};
+            continents[continent][zoneName] ??= {};
+            continents[continent][zoneName][entry] ??= [];
+            continents[continent][zoneName][entry].push([
+                Number(result.mx.toFixed(14)), // [1] Horizontal
+                Number(result.my.toFixed(14)), // [2] Vertical
+                0,                             // [3]
+                timestamp,                     // [4]
+                0,                             // [5]
+                'Azerothcore'                  // [6]
             ]);
         }
 
-        // Construcción completa del archivo Gatherer.lua
-        let luaContent = "";
+        console.log(`Descartados (sin zona válida o fuera de rango): ${skipped}`);
 
-        // 1. GatherItems
-        luaContent += "GatherItems = {\n    {\n";
-        for (const zoneName in zonesData) {
-            luaContent += `        ["${zoneName}"] = {\n`;
-            for (const entry in zonesData[zoneName]) {
-                if (entry === "gtype") {
-                    luaContent += `            ["gtype"] = "MINE",\n`;
-                    continue;
+        // ---------- GatherItems
+        let lua = 'GatherItems = {\n';
+        const maxContinent = Math.max(0, ...Object.keys(continents).map(Number));
+        for (let c = 1; c <= maxContinent; c++) {
+            const zones = continents[c];
+            if (!zones) { lua += `${T(1)}{\n${T(1)}}, -- [${c}]\n`; continue; }
+            lua += `${T(1)}{\n`;
+            for (const zoneName of Object.keys(zones)) {
+                lua += `${T(2)}["${zoneName}"] = {\n`;
+                for (const entry of Object.keys(zones[zoneName])) {
+                    lua += `${T(3)}[${entry}] = {\n`;
+                    zones[zoneName][entry].forEach((n, i) => {
+                        lua += `${T(4)}{\n`;
+                        for (let k = 0; k < 5; k++) lua += `${T(5)}${n[k]}, -- [${k + 1}]\n`;
+                        lua += `${T(5)}"${n[5]}", -- [6]\n`;
+                        lua += `${T(4)}}, -- [${i + 1}]\n`;
+                    });
+                    lua += `${T(4)}["gtype"] = "MINE",\n`;
+                    lua += `${T(3)}},\n`;
                 }
-                luaContent += `            [${entry}] = {\n`;
-
-                zonesData[zoneName][entry].forEach((node, index) => {
-                    luaContent += `                {\n`;
-                    luaContent += `                    ${node[0]}, -- [1]\n`;
-                    luaContent += `                    ${node[1]}, -- [2]\n`;
-                    luaContent += `                    ${node[2]}, -- [3]\n`;
-                    luaContent += `                    ${node[3]}, -- [4]\n`;
-                    luaContent += `                    ${node[4]}, -- [5]\n`;
-                    luaContent += `                    "${node[5]}", -- [6]\n`;
-                    luaContent += `                }, -- [${index + 1}]\n`;
-                });
-
-                luaContent += `            },\n`;
+                lua += `${T(2)}},\n`;
             }
-            luaContent += `        },\n`;
+            lua += `${T(1)}}, -- [${c}]\n`;
         }
-        luaContent += `    }, -- [1]\n`;
-        luaContent += `    ["dbVersion"] = 3,\n`;
-        luaContent += `}\n\n`;
+        lua += `${T(1)}["dbVersion"] = 3,\n}\n`;
 
-        // 2. GatherDrops y configuraciones restantes
-        luaContent += `GatherDrops = nil\n\n`;
-        luaContent += `Gatherer_DropRates = {\n`;
-        luaContent += `    ["dbVersion"] = 2,\n`;
-        luaContent += `}\n\n`;
+        // ---------- Resto del archivo
+        lua += 'GatherDrops = nil\n';
+        lua += 'Gatherer_DropRates = {\n\t["dbVersion"] = 2,\n}\n';
+        lua += 'Gatherer_SavedSettings_AccountWide = {\n\t["profile.Default"] = {\n\t\t["miniicon.angle"] = 262.5394472895813,\n\t},\n\t["SETTINGS_VERSION"] = 2,\n}\n';
+        lua += buildLibSwagData();
+        lua += 'Gatherer_SharingBlacklist = {\n}\n';
 
-        luaContent += `Gatherer_SavedSettings_AccountWide = {\n`;
-        luaContent += `    ["profile.Default"] = {\n`;
-        luaContent += `        ["miniicon.angle"] = 261.8699049401562,\n`;
-        luaContent += `    },\n`;
-        luaContent += `    ["SETTINGS_VERSION"] = 2,\n`;
-        luaContent += `}\n\n`;
-
-        // 3. LibSwagData
-        luaContent += `LibSwagData = {\n`;
-        luaContent += `    ["items"] = {\n`;
-        luaContent += `        [3357] = { ["cat"] = "HERB", ["name"] = "Liferoot" },\n`;
-        luaContent += `        [2452] = { ["cat"] = "HERB", ["name"] = "Swiftthistle" },\n`;
-        luaContent += `        [2775] = { ["cat"] = "MINE", ["name"] = "Silver Ore" },\n`;
-        luaContent += `        [3358] = { ["cat"] = "HERB", ["name"] = "Khadgar's Whisker" },\n`;
-        luaContent += `        [13463] = { ["cat"] = "HERB", ["name"] = "Dreamfoil" },\n`;
-        luaContent += `        [13464] = { ["cat"] = "HERB", ["name"] = "Golden Sansam" },\n`;
-        luaContent += `        [13465] = { ["cat"] = "HERB", ["name"] = "Mountain Silversage" },\n`;
-        luaContent += `        [2776] = { ["cat"] = "MINE", ["name"] = "Gold Ore" },\n`;
-        luaContent += `        [13466] = { ["cat"] = "HERB", ["name"] = "Plaguebloom" },\n`;
-        luaContent += `        [8836] = { ["cat"] = "HERB", ["name"] = "Arthas' Tears" },\n`;
-        luaContent += `        [13467] = { ["cat"] = "HERB", ["name"] = "Icecap" },\n`;
-        luaContent += `        [13468] = { ["cat"] = "HERB", ["name"] = "Black Lotus" },\n`;
-        luaContent += `        [8838] = { ["cat"] = "HERB", ["name"] = "Sungrass" },\n`;
-        luaContent += `        [8839] = { ["cat"] = "HERB", ["name"] = "Blindweed" },\n`;
-        luaContent += `        [8153] = { ["cat"] = "HERB", ["name"] = "Wildvine" },\n`;
-        luaContent += `        [2447] = { ["cat"] = "HERB", ["name"] = "Peacebloom" },\n`;
-        luaContent += `        [2770] = { ["cat"] = "MINE", ["name"] = "Copper Ore" },\n`;
-        luaContent += `        [3369] = { ["cat"] = "HERB", ["name"] = "Grave Moss" },\n`;
-        luaContent += `        [765] = { ["cat"] = "HERB", ["name"] = "Silverleaf" },\n`;
-        luaContent += `        [8846] = { ["cat"] = "HERB", ["name"] = "Gromsblood" },\n`;
-        luaContent += `        [2771] = { ["cat"] = "MINE", ["name"] = "Tin Ore" },\n`;
-        luaContent += `        [3858] = { ["cat"] = "MINE", ["name"] = "Mithril Ore" },\n`;
-        luaContent += `        [3819] = { ["cat"] = "HERB", ["name"] = "Wintersbite" },\n`;
-        luaContent += `        [785] = { ["cat"] = "HERB", ["name"] = "Mageroyal" },\n`;
-        luaContent += `        [2772] = { ["cat"] = "MINE", ["name"] = "Iron Ore" },\n`;
-        luaContent += `        [3355] = { ["cat"] = "HERB", ["name"] = "Wild Steelbloom" },\n`;
-        luaContent += `        [3820] = { ["cat"] = "HERB", ["name"] = "Stranglekelp" },\n`;
-        luaContent += `        [2450] = { ["cat"] = "HERB", ["name"] = "Briarthorn" },\n`;
-        luaContent += `        [11370] = { ["cat"] = "MINE", ["name"] = "Dark Iron Ore" },\n`;
-        luaContent += `        [2453] = { ["cat"] = "HERB", ["name"] = "Bruiseweed" },\n`;
-        luaContent += `        [3356] = { ["cat"] = "HERB", ["name"] = "Kingsblood" },\n`;
-        luaContent += `        [10620] = { ["cat"] = "MINE", ["name"] = "Thorium Ore" },\n`;
-        luaContent += `        [3818] = { ["cat"] = "HERB", ["name"] = "Fadeleaf" },\n`;
-        luaContent += `        [3821] = { ["cat"] = "HERB", ["name"] = "Goldthorn" },\n`;
-        luaContent += `        [2449] = { ["cat"] = "HERB", ["name"] = "Earthroot" },\n`;
-        luaContent += `        [7911] = { ["cat"] = "MINE", ["name"] = "Truesilver Ore" },\n`;
-        luaContent += `        [8845] = { ["cat"] = "HERB", ["name"] = "Ghost Mushroom" },\n`;
-        luaContent += `        [4625] = { ["cat"] = "HERB", ["name"] = "Firebloom" },\n`;
-        luaContent += `        [8831] = { ["cat"] = "HERB", ["name"] = "Purple Lotus" },\n`;
-        luaContent += `    },\n`;
-        luaContent += `    ["MINE"] = {\n    },\n`;
-        luaContent += `    ["ai"] = {\n    },\n`;
-        luaContent += `    ["spells"] = {\n    },\n`;
-        luaContent += `    ["cats"] = {\n`;
-        luaContent += `        ["MINE"] = {\n`;
-        luaContent += `            ["Truesilver Ore"] = 7911,\n`;
-        luaContent += `            ["Dark Iron Ore"] = 11370,\n`;
-        luaContent += `            ["Tin Ore"] = 2771,\n`;
-        luaContent += `            ["Copper Ore"] = 2770,\n`;
-        luaContent += `            ["Thorium Ore"] = 10620,\n`;
-        luaContent += `            ["Iron Ore"] = 2772,\n`;
-        luaContent += `            ["Silver Ore"] = 2775,\n`;
-        luaContent += `            ["Gold Ore"] = 2776,\n`;
-        luaContent += `            ["Mithril Ore"] = 3858,\n`;
-        luaContent += `        },\n`;
-        luaContent += `        ["HERB"] = {\n`;
-        luaContent += `            ["Briarthorn"] = 2450,\n`;
-        luaContent += `            ["Grave Moss"] = 3369,\n`;
-        luaContent += `            ["Wild Steelbloom"] = 3355,\n`;
-        luaContent += `            ["Gromsblood"] = 8846,\n`;
-        luaContent += `            ["Khadgar's Whisker"] = 3358,\n`;
-        luaContent += `            ["Swiftthistle"] = 2452,\n`;
-        luaContent += `            ["Icecap"] = 13467,\n`;
-        luaContent += `            ["Earthroot"] = 2449,\n`;
-        luaContent += `            ["Sungrass"] = 8838,\n`;
-        luaContent += `            ["Mountain Silversage"] = 13465,\n`;
-        luaContent += `            ["Goldthorn"] = 3821,\n`;
-        luaContent += `            ["Mageroyal"] = 785,\n`;
-        luaContent += `            ["Wildvine"] = 8153,\n`;
-        luaContent += `            ["Silverleaf"] = 765,\n`;
-        luaContent += `            ["Wintersbite"] = 3819,\n`;
-        luaContent += `            ["Black Lotus"] = 13468,\n`;
-        luaContent += `            ["Bruiseweed"] = 2453,\n`;
-        luaContent += `            ["Kingsblood"] = 3356,\n`;
-        luaContent += `            ["Liferoot"] = 3357,\n`;
-        luaContent += `            ["Fadeleaf"] = 3818,\n`;
-        luaContent += `            ["Dreamfoil"] = 13463,\n`;
-        luaContent += `            ["Arthas' Tears"] = 8836,\n`;
-        luaContent += `            ["Plaguebloom"] = 13466,\n`;
-        luaContent += `            ["Ghost Mushroom"] = 8845,\n`;
-        luaContent += `            ["Stranglekelp"] = 3820,\n`;
-        luaContent += `            ["Blindweed"] = 8839,\n`;
-        luaContent += `            ["Firebloom"] = 4625,\n`;
-        luaContent += `            ["Peacebloom"] = 2447,\n`;
-        luaContent += `            ["Purple Lotus"] = 8831,\n`;
-        luaContent += `            ["Golden Sansam"] = 13464,\n`;
-        luaContent += `        },\n`;
-        luaContent += `    },\n`;
-        luaContent += `    ["HERB"] = {\n    },\n`;
-        luaContent += `}\n\n`;
-
-        luaContent += `Gatherer_SharingBlacklist = {\n}\n`;
-
-        fs.writeFileSync('Gatherer.lua', luaContent, 'utf8');
-        console.log('¡Archivo Gatherer.lua generado correctamente con la validación de mapID!');
-
+        fs.writeFileSync('Gatherer.lua', lua, 'utf8');
+        console.log('¡Archivo Gatherer.lua generado correctamente!');
     } catch (error) {
         console.error('Error durante la ejecución:', error.message);
     } finally {
