@@ -46,11 +46,39 @@ function getZoneName(area) {
 
 // ---------- Excepciones: nombre del objeto -> ID que usa Gatherer
 // Por defecto se usa el menor entry de gameobject_template con ese nombre
-// (Copper Vein -> 1731, Mithril Deposit -> 2040). Si alguna veta sale con un ID
-// distinto al de tu Gatherer.lua real, añádela aquí.
+// (Copper Vein -> 1731, Mithril Deposit -> 2040, Peacebloom -> 1618).
 const NODE_ID_OVERRIDES = {
     // 'Nombre del objeto': 12345,
 };
+
+// ---------- Tipo de nodo (gtype) según el nombre del objeto
+// Minerales: cualquier nombre con "Vein" o "Deposit". Hierbas: lista de nombres.
+// Los objetos que no encajan en ninguno (cofres, etc.) se descartan.
+const HERB_NAMES = new Set([
+    // Clásico
+    'Peacebloom', 'Silverleaf', 'Earthroot', 'Mageroyal', 'Briarthorn', 'Bruiseweed',
+    'Wild Steelbloom', 'Kingsblood', 'Liferoot', 'Fadeleaf', 'Goldthorn', "Khadgar's Whisker",
+    'Wintersbite', 'Stranglekelp', 'Firebloom', 'Purple Lotus', "Arthas' Tears", 'Sungrass',
+    'Blindweed', 'Ghost Mushroom', 'Gromsblood', 'Golden Sansam', 'Dreamfoil',
+    'Mountain Silversage', 'Plaguebloom', 'Icecap', 'Black Lotus', 'Grave Moss',
+    'Swiftthistle', 'Wildvine',
+    // Burning Crusade
+    'Felweed', 'Dreaming Glory', 'Ragveil', 'Terocone', 'Ancient Lichen', 'Netherbloom',
+    'Nightmare Vine', 'Mana Thistle', 'Flame Cap', 'Fel Lotus',
+    // Wrath of the Lich King
+    'Goldclover', 'Tiger Lily', "Talandra's Rose", "Adder's Tongue", 'Lichbloom',
+    'Icethorn', 'Frozen Herb', 'Firethorn', 'Frost Lotus', 'Deadnettle'
+].map(n => n.toLowerCase()));
+
+function getGatherType(name) {
+    if (HERB_NAMES.has(name.toLowerCase())) return 'HERB';
+    if (/\b(vein|deposit)\b/i.test(name)) return 'MINE';
+    return null;
+}
+
+// Gatherer añade el campo [6] "Azerothcore" en los nodos. Según tu ejemplo,
+// las hierbas salen sin él; ponlo en true si quieres que lo lleven también.
+const HERB_INCLUDE_SOURCE = true;
 
 // ---------- Continentes (índice del cliente: 1=Kalimdor, 2=Reinos del Este, 3=Terrallende, 4=Rasganorte)
 const EK_IN_530 = new Set([3430, 3433, 4080, 3487]);   // Eversong, Ghostlands, Quel'Danas, Silvermoon
@@ -163,14 +191,21 @@ async function generateGatherer() {
             WHERE t.type = 3;
         `;
         const [rows] = await connection.execute(query);
-        console.log(`Se encontraron ${rows.length} objetos mineros.`);
+        console.log(`Se leyeron ${rows.length} objetos de tipo 3.`);
 
-        // continents[idx][zoneName][entry] = [nodos]
+        // continents[idx][zoneName][entry] = { gtype, nodes: [...] }
         const continents = {};
         const timestamp = Math.floor(Date.now() / 1000);
         let skipped = 0;
+        const unknownNames = new Map(); // nombres descartados por no ser mineral ni hierba
 
         for (const row of rows) {
+            const gtype = getGatherType(row.object_name);
+            if (!gtype) {
+                unknownNames.set(row.object_name, (unknownNames.get(row.object_name) || 0) + 1);
+                continue;
+            }
+
             const zone = row.zoneId || row.areaId;
             const continent = getContinent(row.map, zone);
             if (!continent) { skipped++; continue; }
@@ -192,20 +227,28 @@ async function generateGatherer() {
             // no por el entry concreto del gameobject.
             const entry = NODE_ID_OVERRIDES[row.object_name] ?? row.canonical_entry ?? row.id;
 
-            continents[continent] ??= {};
-            continents[continent][zoneName] ??= {};
-            continents[continent][zoneName][entry] ??= [];
-            continents[continent][zoneName][entry].push([
+            const node = [
                 Number(result.mx.toFixed(14)), // [1] Horizontal
                 Number(result.my.toFixed(14)), // [2] Vertical
                 0,                             // [3]
                 timestamp,                     // [4]
-                0,                             // [5]
-                'Azerothcore'                  // [6]
-            ]);
+                0                              // [5]
+            ];
+            if (gtype === 'MINE' || HERB_INCLUDE_SOURCE) node.push('Azerothcore'); // [6]
+
+            continents[continent] ??= {};
+            continents[continent][zoneName] ??= {};
+            continents[continent][zoneName][entry] ??= { gtype, nodes: [] };
+            continents[continent][zoneName][entry].nodes.push(node);
         }
 
         console.log(`Descartados (sin zona válida o fuera de rango): ${skipped}`);
+        if (unknownNames.size > 0) {
+            const top = [...unknownNames.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15);
+            console.log(`Descartados por no ser mineral ni hierba (${unknownNames.size} nombres distintos). Los más frecuentes:`);
+            for (const [name, count] of top) console.log(`   ${name}: ${count}`);
+            console.log('Si alguna hierba aparece aquí, añádela a HERB_NAMES.');
+        }
 
         // ---------- GatherItems
         let lua = 'GatherItems = {\n';
@@ -217,14 +260,17 @@ async function generateGatherer() {
             for (const zoneName of Object.keys(zones)) {
                 lua += `${T(2)}["${zoneName}"] = {\n`;
                 for (const entry of Object.keys(zones[zoneName])) {
+                    const { gtype, nodes } = zones[zoneName][entry];
                     lua += `${T(3)}[${entry}] = {\n`;
-                    zones[zoneName][entry].forEach((n, i) => {
+                    nodes.forEach((n, i) => {
                         lua += `${T(4)}{\n`;
-                        for (let k = 0; k < 5; k++) lua += `${T(5)}${n[k]}, -- [${k + 1}]\n`;
-                        lua += `${T(5)}"${n[5]}", -- [6]\n`;
+                        n.forEach((v, k) => {
+                            const val = typeof v === 'string' ? `"${v}"` : v;
+                            lua += `${T(5)}${val}, -- [${k + 1}]\n`;
+                        });
                         lua += `${T(4)}}, -- [${i + 1}]\n`;
                     });
-                    lua += `${T(4)}["gtype"] = "MINE",\n`;
+                    lua += `${T(4)}["gtype"] = "${gtype}",\n`;
                     lua += `${T(3)}},\n`;
                 }
                 lua += `${T(2)}},\n`;
