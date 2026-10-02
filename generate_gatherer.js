@@ -27,15 +27,15 @@ const ZONE_NAMES = {
     33: 'Stranglethorn Vale', 8: 'Swamp of Sorrows', 40: 'Westfall', 11: 'Wetlands',
     1519: 'Stormwind City', 1537: 'Ironforge', 1497: 'Undercity',
     // Terrallende (+ zonas de Quel'Thalas / Azuremyst en el mapa 530)
-    3430: 'Eversong Woods', 3433: 'Ghostlands', 4080: "Isle of Quel'Danas", 3487: 'Silvermoon City',
+    3430: 'Eversong Woods', 3433: 'Ghostlands', 4080: "Quel Danas", 3487: 'Silvermoon City',
     3524: 'Azuremyst Isle', 3525: 'Bloodmyst Isle', 3557: 'The Exodar',
     3483: 'Hellfire Peninsula', 3521: 'Zangarmarsh', 3520: 'Shadowmoon Valley',
-    3522: "Blade's Edge Mountains", 3518: 'Nagrand', 3519: 'Terokkar Forest',
+    3522: "Blades Edge Mountains", 3518: 'Nagrand', 3519: 'Terokkar Forest',
     3523: 'Netherstorm', 3703: 'Shattrath City',
     // Rasganorte
     3537: 'Borean Tundra', 65: 'Dragonblight', 394: 'Grizzly Hills', 495: 'Howling Fjord',
-    210: 'Icecrown Glacier', 3711: 'Sholazar Basin', 67: 'The Storm Peaks', 66: "Zuldrak",
-    4197: 'Wintergrasp', 2817: 'Crystalsong Forest', 4742: "Hrothgar's Landing"
+    210: 'Icecrown Glacier', 3711: 'Sholazar Basin', 67: 'Storm Peaks', 66: "Zuldrak",
+    4197: 'Lake Wintergrasp', 2817: 'Crystalsong Forest', 4742: "Hrothgar's Landing"
 };
 
 function getZoneName(area) {
