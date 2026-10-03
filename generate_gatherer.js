@@ -53,7 +53,7 @@ const NODE_ID_OVERRIDES = {
 
 // ---------- Tipo de nodo (gtype) según el nombre del objeto
 // Minerales: cualquier nombre con "Vein" o "Deposit". Hierbas: lista de nombres.
-// Los objetos que no encajan en ninguno (cofres, etc.) se descartan.
+// Los objetos que no encajan en ninguno de los tres tipos (MINE, HERB, OPEN) se descartan.
 const HERB_NAMES = new Set([
     // Clásico
     'Peacebloom', 'Silverleaf', 'Earthroot', 'Mageroyal', 'Briarthorn', 'Bruiseweed',
@@ -70,15 +70,29 @@ const HERB_NAMES = new Set([
     'Icethorn', 'Frozen Herb', 'Firethorn', 'Frost Lotus', 'Deadnettle'
 ].map(n => n.toLowerCase()));
 
+// Objetos "abribles" (tesoros): Gatherer los guarda con gtype "OPEN".
+// Solo se incluyen los nombres de esta lista; el resto de cofres (misiones, etc.) se descarta.
+const OPEN_NAMES = new Set([
+    'Adamantite Bound Chest', 'Armor Crate',
+    'Giant Clam',  'Barrel of Milk',
+    'Barrel of Sweet Nectar', 'Barrel of Melon Juice',
+    'Battered Chest', 'Box of Assorted Parts', 'Blue Power Crystal',
+    'Dark Iron Bound Chest', 'Food Crate',
+    'Felsteel Chest', 'Fel Iron Chest', 'Green Power Crystal',
+    'Heavy Fel Iron Chest', 'Iron Bound Trunk',
+    'Large Battered Chest', 'Large Solid Chest', 'Large Iron Bound Chest',
+    'Large Mithril Bound Chest', 'Large Darkwood Chest',
+    'Mithril Bound Trunk', 'Red Power Crystal', 'Shellfish Trap',
+    'Solid Chest', 'Tattered Chest', "Un'Goro Dirt Pile",
+    'Water Barrel', 'Weapon Crate', 'Yellow Power Crystal'
+].map(n => n.toLowerCase()));
+
 function getGatherType(name) {
+    if (OPEN_NAMES.has(name.toLowerCase())) return 'OPEN';
     if (HERB_NAMES.has(name.toLowerCase())) return 'HERB';
     if (/\b(vein|deposit)\b/i.test(name)) return 'MINE';
     return null;
 }
-
-// Gatherer añade el campo [6] "Azerothcore" en los nodos. Según tu ejemplo,
-// las hierbas salen sin él; ponlo en true si quieres que lo lleven también.
-const HERB_INCLUDE_SOURCE = true;
 
 // ---------- Continentes (índice del cliente: 1=Kalimdor, 2=Reinos del Este, 3=Terrallende, 4=Rasganorte)
 const EK_IN_530 = new Set([3430, 3433, 4080, 3487]);   // Eversong, Ghostlands, Quel'Danas, Silvermoon
@@ -197,7 +211,7 @@ async function generateGatherer() {
         const continents = {};
         const timestamp = Math.floor(Date.now() / 1000);
         let skipped = 0;
-        const unknownNames = new Map(); // nombres descartados por no ser mineral ni hierba
+        const unknownNames = new Map(); // nombres descartados por no ser mineral, hierba ni tesoro
 
         for (const row of rows) {
             const gtype = getGatherType(row.object_name);
@@ -234,7 +248,7 @@ async function generateGatherer() {
                 timestamp,                     // [4]
                 0                              // [5]
             ];
-            if (gtype === 'MINE' || HERB_INCLUDE_SOURCE) node.push('Azerothcore'); // [6]
+            node.push('Azerothcore'); // [6]
 
             continents[continent] ??= {};
             continents[continent][zoneName] ??= {};
@@ -245,9 +259,9 @@ async function generateGatherer() {
         console.log(`Descartados (sin zona válida o fuera de rango): ${skipped}`);
         if (unknownNames.size > 0) {
             const top = [...unknownNames.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15);
-            console.log(`Descartados por no ser mineral ni hierba (${unknownNames.size} nombres distintos). Los más frecuentes:`);
+            console.log(`Descartados por no ser mineral, hierba ni tesoro (${unknownNames.size} nombres distintos). Los más frecuentes:`);
             for (const [name, count] of top) console.log(`   ${name}: ${count}`);
-            console.log('Si alguna hierba aparece aquí, añádela a HERB_NAMES.');
+            console.log('Si alguno debería incluirse, añádelo a HERB_NAMES u OPEN_NAMES.');
         }
 
         // ---------- GatherItems
