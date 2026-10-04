@@ -404,6 +404,7 @@ function buildLua(rows, worldMapArea, timestamp) {
     // data[continente][zona][id] = { gtype, nodes: [...] }
     const data = {};
     let skipped = 0;
+    const skippedRows = []; // todos los spawns descartados
     const areasByMap = indexAreasByMap(worldMapArea);
 
     for (const row of rows) {
@@ -411,7 +412,17 @@ function buildLua(rows, worldMapArea, timestamp) {
         if (!node) continue;
 
         const found = locate(row, worldMapArea, areasByMap);
-        if (!found) { skipped++; continue; }
+        if (!found) {
+            skipped++;
+            skippedRows.push({
+                id: row.id,
+                name: row.object_name,
+                map: row.map,
+                x: row.position_x,
+                y: row.position_y
+            });
+            continue;
+        }
 
         const { zone, pos } = found;
         data[zone.continent] ??= {};
@@ -452,7 +463,7 @@ function buildLua(rows, worldMapArea, timestamp) {
     lua += `${T(1)}["dbVersion"] = 3,\n}\n`;
     lua += LUA_FOOTER;
 
-    return { lua, skipped };
+    return { lua, skipped, skippedRows };
 }
 
 async function main() {
@@ -469,7 +480,7 @@ async function main() {
 
         const names = [...NODE_BY_NAME.keys()];
         const [rows] = await connection.query(`
-            SELECT g.map, g.zoneId, g.areaId, g.position_x, g.position_y, t.name AS object_name
+            SELECT g.id, g.map, g.zoneId, g.areaId, g.position_x, g.position_y, t.name AS object_name
             FROM gameobject g
             JOIN gameobject_template t ON g.id = t.entry
             WHERE t.name IN (?)
@@ -477,8 +488,11 @@ async function main() {
         console.log(`Se encontraron ${rows.length} objetos que coinciden con la lista.`);
 
         const timestamp = Math.floor(Date.now() / 1000);
-        const { lua, skipped } = buildLua(rows, worldMapArea, timestamp);
+        const { lua, skipped, skippedRows } = buildLua(rows, worldMapArea, timestamp);
         console.log(`Descartados (zona sin coincidencia o fuera de rango): ${skipped}`);
+        for (const o of skippedRows) {
+            console.log(`   [${o.id}] ${o.name} | map=${o.map} x=${o.x} y=${o.y}`);
+        }
 
         fs.writeFileSync('Gatherer.lua', lua, 'utf8');
         console.log('¡Archivo Gatherer.lua generado correctamente!');
